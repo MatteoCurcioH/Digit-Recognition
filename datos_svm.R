@@ -156,3 +156,4 @@ g3 <- ggplot(metrics_df, aes(x = Clase, y = F1_Score, fill = F1_Score)) +
   theme_minimal()
 
 print(g3)
+
