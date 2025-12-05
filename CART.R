@@ -133,4 +133,3 @@ cat("----------------------------------------------------\n")
 
 
 save(cart_model, file = "model_CART.RData")
-load("model_CART.RData")

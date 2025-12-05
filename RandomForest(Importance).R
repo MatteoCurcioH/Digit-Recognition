@@ -152,4 +152,3 @@ cat("----------------------------------------------------\n")
 
 
 save(rf_final_model, file = "model_RandomForest.RData")
-load("model_RandomForest.RData")
