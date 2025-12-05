@@ -149,3 +149,7 @@ cat("\n----------------------------------------------------\n")
 cat("Tiempo TOTAL de ejecución: ")
 print(tiempo_total)
 cat("----------------------------------------------------\n")
+
+
+save(rf_final_model, file = "model_RandomForest.RData")
+load("model_RandomForest.RData")

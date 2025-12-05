@@ -130,3 +130,7 @@ cat("\n----------------------------------------------------\n")
 cat("Tiempo TOTAL de ejecución: ")
 print(tiempo_total)
 cat("----------------------------------------------------\n")
+
+
+save(cart_model, file = "model_CART.RData")
+load("model_CART.RData")
