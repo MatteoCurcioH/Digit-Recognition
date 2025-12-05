@@ -1,5 +1,7 @@
 # --- 1. Instalación y Carga de Librerías ---
 
+inicio_global <- Sys.time()
+
 # install.packages("rpart")       # Librería para árboles CART
 # install.packages("rpart.plot")  # Librería para visualizar el árbol
 # install.packages("e1071")
@@ -19,8 +21,8 @@ library(caret)
 train_data <- read_csv("C:/Users/danie/OneDrive/Escritorio/Danii/Uni/4º Año/Aprendizaje Computacional/Practica (Digit Recognition)/train.csv")
 
 # Muestra reducida para demostración (usa todo el dataset para el modelo final)
-set.seed(42) 
-sample_size <- 2000 # Un poco más grande para que el árbol tenga "carne"
+set.seed(123) 
+sample_size <- 5000 # Un poco más grande para que el árbol tenga "carne"
 full_sample <- train_data[1:sample_size, ]
 
 # División Train/Test
@@ -64,7 +66,6 @@ X_test_pca <- data.frame(predict(pca_model, newdata = X_test))[, 1:k]
 # ----------------------------------------------------------------------
 
 cat("\nIniciando 'tune' para encontrar el mejor cp (Complexity Parameter)...\n")
-inicio_tune <- Sys.time()
 
 # El parámetro cp controla el tamaño del árbol. 
 # Si cp es muy bajo -> Overfitting (árbol gigante).
@@ -77,13 +78,10 @@ tune_cart <- tune.rpart(
   cp = cp_values
 )
 
-fin_tune <- Sys.time()
-
 print(summary(tune_cart))
 best_cp <- tune_cart$best.parameters$cp
 
 cat(paste0("\nMejor cp encontrado: ", best_cp, "\n"))
-cat(paste("Tiempo de optimización:", round(difftime(fin_tune, inicio_tune, units="secs"), 2), "s\n"))
 
 
 # ----------------------------------------------------------------------
@@ -91,7 +89,6 @@ cat(paste("Tiempo de optimización:", round(difftime(fin_tune, inicio_tune, unit
 # ----------------------------------------------------------------------
 
 cat("\nEntrenando árbol final con el mejor cp...\n")
-inicio_train <- Sys.time()
 
 cart_model <- rpart(
   label ~ ., 
@@ -101,7 +98,6 @@ cart_model <- rpart(
 )
 
 fin_train <- Sys.time()
-cat(paste("Tiempo de entrenamiento:", round(difftime(fin_train, inicio_train, units="secs"), 2), "s\n"))
 
 
 # ----------------------------------------------------------------------
@@ -109,17 +105,13 @@ cat(paste("Tiempo de entrenamiento:", round(difftime(fin_train, inicio_train, un
 # ----------------------------------------------------------------------
 
 cat("\n--- Evaluación en Test ---\n")
-inicio_pred <- Sys.time()
 
 # Predicción (type = "class" nos da la etiqueta directamente)
 pred_cart <- predict(cart_model, newdata = X_test_pca, type = "class")
 
-fin_pred <- Sys.time()
-
 # Accuracy
 acc <- mean(pred_cart == test_set$label)
 cat(paste0("Accuracy CART: ", round(acc * 100, 2), "%\n"))
-cat(paste("Tiempo de predicción:", round(difftime(fin_pred, inicio_pred, units="secs"), 2), "s\n"))
 
 # Matriz de Confusión
 print(confusionMatrix(pred_cart, test_set$label))
@@ -129,3 +121,12 @@ print(confusionMatrix(pred_cart, test_set$label))
 rpart.plot(cart_model, extra = 104, box.palette = "GnBu", 
            branch.lty = 3, shadow.col = "gray", nn = TRUE, 
            main = "Árbol de Decisión (CART) sobre Componentes PCA")
+
+
+fin_global <- Sys.time()
+tiempo_total <- fin_global - inicio_global
+
+cat("\n----------------------------------------------------\n")
+cat("Tiempo TOTAL de ejecución: ")
+print(tiempo_total)
+cat("----------------------------------------------------\n")
