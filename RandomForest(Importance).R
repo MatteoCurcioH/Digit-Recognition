@@ -19,7 +19,7 @@ inicio_global <- Sys.time()
 train_data <- read_csv("C:/Users/danie/OneDrive/Escritorio/Danii/Uni/4º Año/Aprendizaje Computacional/Practica (Digit Recognition)/train.csv")
 
 # Usamos una muestra pequeña (1000 filas) para la demostración
-set.seed(42) 
+set.seed(123) 
 sample_size <- 5000
 full_sample <- train_data[1:sample_size, ]
 
@@ -83,7 +83,7 @@ cat("\nIniciando la optimización de parámetros (tune) sobre datos reducidos...
 # mtry: Número de variables a muestrear en cada división.
 # Regla: sqrt(variables). Variables = 100 -> sqrt(100) = 10.
 # Probamos valores alrededor de 10.
-mtry_values <- c(8, 10, 12) 
+mtry_values <- c(5, 8, 10, 12, 15) 
 
 tune_rf_results <- tune(
   randomForest, 
